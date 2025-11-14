@@ -1,0 +1,22 @@
+LOGO.PNG REQUIRED
+
+A logo.png file is required for PrestaShop module distribution.
+
+Requirements:
+- File name: logo.png
+- Recommended size: 140 x 140 pixels
+- Format: PNG
+- Location: Root of the module directory
+
+This logo will be displayed:
+- In the PrestaShop back office module list
+- On the module's page in the marketplace
+- During module installation
+
+Please create a logo.png file with your module branding and place it in the root directory.
+
+Suggested design elements:
+- Bank/wire transfer icon
+- Money/payment symbols
+- Module name or initials
+- Professional appearance

@@ -1,0 +1,16 @@
+# Generated module packages
+*.zip
+
+# Composer dependencies (if any)
+/vendor/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

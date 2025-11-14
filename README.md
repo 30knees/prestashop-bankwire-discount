@@ -51,11 +51,45 @@ This module provides a configurable discount for customers who choose to pay via
 
 ## Installation
 
-1. Copy the `bankwirepaymentdiscount` folder to your PrestaShop `modules/` directory
+### Method 1: Direct Upload (Recommended)
+
+1. Download or create a zip file containing the module
 2. Go to your PrestaShop back office
 3. Navigate to **Modules > Module Manager**
-4. Search for "Bank Wire Payment Discount"
-5. Click **Install**
+4. Click **Upload a module** button
+5. Select the `bankwirepaymentdiscount.zip` file
+6. PrestaShop will automatically extract and install the module
+7. Click **Configure** to set up the discount
+
+### Method 2: Manual Installation
+
+1. Extract the module files
+2. Upload the entire `bankwirepaymentdiscount` folder to your PrestaShop `modules/` directory via FTP or file manager
+3. Go to your PrestaShop back office
+4. Navigate to **Modules > Module Manager**
+5. Search for "Bank Wire Payment Discount"
+6. Click **Install**
+
+### Creating Distribution Package
+
+To create a distribution package for this module:
+
+```bash
+# Clone or navigate to the module directory
+cd prestashop-bankwire-discount
+
+# If using composer dependencies (optional):
+composer install --no-dev --optimize-autoloader
+
+# Create the zip file (excludes git and development files)
+git archive --format=zip --prefix=bankwirepaymentdiscount/ -o bankwirepaymentdiscount.zip HEAD
+
+# Or manually create zip with required files only
+zip -r bankwirepaymentdiscount.zip bankwirepaymentdiscount/ \
+  -x "*.git*" "CONTRIBUTING.md" "GITHUB_SETUP.md" "LOGO_NEEDED.txt"
+```
+
+**Note**: You need to add a `logo.png` file (140x140px) before distribution. See `LOGO_NEEDED.txt` for requirements.
 
 ## Configuration
 
@@ -107,25 +141,33 @@ The module provides methods to automatically apply the discount as a cart rule w
 bankwirepaymentdiscount/
 ├── bankwirepaymentdiscount.php          # Main module class
 ├── config.xml                            # Module configuration
+├── composer.json                         # Composer configuration for autoloading
+├── logo.png                              # Module icon (140x140px) - REQUIRED
 ├── index.php                             # Security file
-├── README.md                             # This file
+├── LICENSE                               # AFL-3.0 license
+├── README.md                             # Documentation
+├── CHANGELOG.md                          # Version history
 ├── controllers/
+│   ├── index.php
 │   └── front/
 │       ├── applydiscount.php            # AJAX controller for discount application
 │       └── index.php
-├── views/
-│   ├── css/
-│   │   ├── bankwirepaymentdiscount.css  # Module styles
-│   │   └── index.php
-│   ├── js/
-│   │   ├── bankwirepaymentdiscount.js   # Frontend JavaScript
-│   │   └── index.php
-│   └── templates/
-│       └── hook/
-│           ├── payment_discount.tpl      # Payment option discount template
-│           ├── payment_top_discount.tpl  # Top banner template
-│           ├── cart_discount_info.tpl    # Cart info template
-│           └── index.php
+├── translations/                         # Multi-language support
+│   ├── de.php, en.php, fr.php, etc.     # 11 language files
+│   └── index.php
+└── views/
+    ├── css/
+    │   ├── bankwirepaymentdiscount.css  # Module styles
+    │   └── index.php
+    ├── js/
+    │   ├── bankwirepaymentdiscount.js   # Frontend JavaScript
+    │   └── index.php
+    └── templates/
+        └── hook/
+            ├── payment_discount.tpl      # Payment option discount template
+            ├── payment_top_discount.tpl  # Top banner template
+            ├── cart_discount_info.tpl    # Cart info template
+            └── index.php
 ```
 
 ## Configuration Options
@@ -187,9 +229,10 @@ The module automatically uses the language configured in PrestaShop for both cus
 
 ## Compatibility
 
-- **PrestaShop Version**: 1.7 and later (including 8.x)
-- **PHP Version**: 7.1+
+- **PrestaShop Version**: 1.7 and later (tested with PrestaShop 8.0, 8.1, 8.2)
+- **PHP Version**: 7.2+ (recommended: PHP 8.0 or later for PrestaShop 8.2)
 - **Dependencies**: None (works with standard PrestaShop installation)
+- **Module Type**: PrestaShop native module compliant with PrestaShop 8.x standards
 
 ## Contributing
 
