@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
 
+use PrestaShop\Module\BankWirePaymentDiscount\Module\BankWirePaymentDiscount as BankWireModule;
+
 class BankWirePaymentDiscountApplyDiscountModuleFrontController extends ModuleFrontController
 {
     /**
@@ -63,7 +65,7 @@ class BankWirePaymentDiscountApplyDiscountModuleFrontController extends ModuleFr
             return;
         }
 
-        if (!$module->active || !Configuration::get('BANKWIRE_DISCOUNT_ENABLED')) {
+        if (!$module->active || !$module->isDiscountEnabled()) {
             $response['message'] = 'Module disabled';
             $this->ajaxRender(json_encode($response));
             return;
@@ -72,7 +74,7 @@ class BankWirePaymentDiscountApplyDiscountModuleFrontController extends ModuleFr
         // Check if already applied
         $cartRules = $cart->getCartRules();
         foreach ($cartRules as $rule) {
-            if (strpos($rule['code'], 'BANKWIRE_DISCOUNT_') === 0) {
+            if (strpos($rule['code'], BankWireModule::CART_RULE_PREFIX) === 0) {
                 $response['success'] = true;
                 $response['message'] = 'Discount already applied';
                 $response['discount_amount'] = $rule['value_real'];
