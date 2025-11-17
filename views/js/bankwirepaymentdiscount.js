@@ -13,6 +13,24 @@
 document.addEventListener('DOMContentLoaded', function() {
     let discountApplied = false;
 
+    function isBankWireOption(input) {
+        if (!input) {
+            return false;
+        }
+
+        const candidates = [
+            (input.id || '').toLowerCase(),
+            (input.value || '').toLowerCase(),
+            (input.dataset.moduleName || '').toLowerCase(),
+            (input.getAttribute('data-module-name') || '').toLowerCase(),
+            (input.getAttribute('data-payment-option') || '').toLowerCase(),
+        ];
+
+        return candidates.some(function(value) {
+            return value.includes('bankwire') || value.includes('wirepayment');
+        });
+    }
+
     // Function to inject discount information into bank wire payment option
     function enhanceBankWireOption() {
         // Find all payment options
@@ -21,12 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         paymentOptions.forEach(function(option) {
             const input = option.querySelector('input[type="radio"]');
 
-            if (input && (
-                input.id.includes('bankwire') ||
-                input.id.includes('wirepayment') ||
-                input.value.includes('bankwire') ||
-                input.value.includes('wirepayment')
-            )) {
+            if (isBankWireOption(input)) {
                 // This is the bank wire payment option
                 // Add a class for easier styling
                 option.classList.add('bankwire-payment-option');
@@ -92,16 +105,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
             input.addEventListener('change', function() {
                 // Check if bank wire is selected
-                const isBankWire = input.id.includes('bankwire') ||
-                                   input.id.includes('wirepayment') ||
-                                   input.value.includes('bankwire') ||
-                                   input.value.includes('wirepayment');
-
-                if (isBankWire) {
+                if (isBankWireOption(input)) {
                     applyBankWireDiscount();
                 }
             });
         });
+
+        applyDiscountIfBankWireSelected();
+    }
+
+    function applyDiscountIfBankWireSelected() {
+        const selectedPaymentOption = document.querySelector('input[name="payment-option"]:checked');
+
+        if (isBankWireOption(selectedPaymentOption)) {
+            applyBankWireDiscount();
+        }
     }
 
     // Function to apply bank wire discount via AJAX
@@ -142,6 +160,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
 
                     document.dispatchEvent(event);
+
+                    if (window.prestashop && typeof prestashop.emit === 'function') {
+                        prestashop.emit('updateCart', {
+                            reason: 'bankwire-discount-applied',
+                        });
+                    }
                 } else if (window.console && data.message) {
                     console.warn('Bank Wire Discount:', data.message);
                 }
